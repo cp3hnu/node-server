@@ -1,13 +1,18 @@
 import { Sequelize, DataTypes } from "sequelize";
+import path, { dirname} from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-export const createDatabase = async () => {
-  const sequelize = new Sequelize('sqlite::memory:');
-  const User = sequelize.define('User', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, allowNull: false, autoIncrement: true },
-    name: DataTypes.STRING,
-    age: DataTypes.INTEGER
-  });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const filePath = path.join(__dirname, 'database.sqlite');
 
-  await User.sync();
-  return { sequelize, User };
-}
+export const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: filePath
+});
+
+export const User = sequelize.define('User', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, allowNull: false, autoIncrement: true },
+  name: DataTypes.STRING,
+  age: DataTypes.INTEGER
+});

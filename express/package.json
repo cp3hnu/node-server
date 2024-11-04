@@ -1,9 +1,9 @@
 {
   "name": "node-server",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Node.js server",
-  "type": "module",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
@@ -11,7 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "sequelize": "~6.37.5",
-    "sqlite3": "~5.1.7"
+    "express": "^4.21.1",
+    "sequelize": "^6.37.5",
+    "sqlite3": "^5.1.7"
   }
 }

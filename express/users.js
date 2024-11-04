@@ -1,12 +1,12 @@
-
-import Method from "./method.js";
-import { createSuccessResponse } from "./response.js";
-import { User } from './database.js';
+import Method from "../nodejs/method.js";
+import { createSuccessResponse } from "../nodejs/response.js";
+import { User } from '../nodejs/database.js';
 import { Op } from 'sequelize'
 
-export const getUsers = async (response, request, id) => {
-  if (id && !isNaN(id)) {
-    const idNum = Number(id);
+export const getUsers = async (request, response) => {
+  const id = request.params.id
+  const idNum = Number(id);
+  if (id && !isNaN(idNum)) {
     const users = await User.findAll({
       where: {
         id: idNum
@@ -25,7 +25,7 @@ export const getUsers = async (response, request, id) => {
   } else {
     const url = new URL(request.url, 'http://localhost:3000');
     const query = url.searchParams;
-    const name = query.get('name');
+    const name = query.get('name') ?? '';
     const users = await User.findAll({
       where: {
         name: {
@@ -38,7 +38,7 @@ export const getUsers = async (response, request, id) => {
     response.end(JSON.stringify(createSuccessResponse(users)));
   }
 }
-export const postUsers = async (response, request) => {
+export const postUsers = async (request, response) => {
   request.setEncoding('utf8');
   let body = '';
   request.on('data', (data) => {
@@ -53,7 +53,8 @@ export const postUsers = async (response, request) => {
   });
 }
 
-export const patchUsers = async (response, request, id) => {
+export const patchUsers = async (request, response) => {
+  const id = request.params.id
   const idNum = Number(id);
   request.setEncoding('utf8');
   let body = '';
@@ -80,7 +81,8 @@ export const patchUsers = async (response, request, id) => {
   });
 }
 
-export const putUsers = async (response, request, id) => {
+export const putUsers = async (request, response) => {
+  const id = request.params.id
   const idNum = Number(id);
   request.setEncoding('utf8');
   let body = '';
@@ -108,7 +110,8 @@ export const putUsers = async (response, request, id) => {
   });
 }
 
-export const deleteUsers = async (response, request, id) => {
+export const deleteUsers = async (request, response) => {
+  const id = request.params.id
   const idNum = Number(id);
   const result = await User.destroy({
     where: {
@@ -124,7 +127,7 @@ export const deleteUsers = async (response, request, id) => {
   response.end(JSON.stringify(createSuccessResponse(null)));
 }
 
-const usersHandlers = {
+const Users = {
   [Method.GET]: getUsers,
   [Method.POST]: postUsers,
   [Method.PATCH]: patchUsers,
@@ -132,14 +135,4 @@ const usersHandlers = {
   [Method.DELETE]: deleteUsers
 }
 
-export const handleUsers = async (response, request, id) => {
-  const method = request.method;
-  const func = usersHandlers[method];
-  if (func) {
-    await func(response, request, id);
-  } else {
-    response.statusCode = 405;
-    response.end('Method Not Allowed');
-  }
-}
-
+export default Users

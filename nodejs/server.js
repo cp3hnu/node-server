@@ -1,7 +1,7 @@
 import http from 'node:http';
 import process from 'node:process';
 import router from "./router.js";
-import { sequelize, User } from './database.js';
+import { sequelize, authenticateAndSync } from './database.js';
 
 const startServer = async () => {
   const server = http.createServer(async (req, res) => {
@@ -12,7 +12,7 @@ const startServer = async () => {
     await router(pathname, res, req, id);
   });
 
-  await sequelize.sync();
+  await authenticateAndSync();
 
   server.listen(3000, () => {
     console.log('Server running on http://localhost:3000');

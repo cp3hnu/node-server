@@ -1,6 +1,6 @@
 import Method from "../nodejs/method.js";
 
-const createRource = (app, path, obj) => {
+const createResource = (app, path, obj) => {
   app.get(path, obj[Method.GET]);
   app.get(path + "/:id(\\d+)", obj[Method.GET]);
   app.post(path , obj[Method.POST]);
@@ -9,5 +9,5 @@ const createRource = (app, path, obj) => {
   app.delete(path + "/:id(\\d+)", obj[Method.DELETE]);
 }
 
-export default createRource
+export default createResource
   

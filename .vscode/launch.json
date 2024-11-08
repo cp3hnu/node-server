@@ -5,18 +5,27 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "nodemon express",
+      "program": "index.js",
+      "cwd": "${workspaceFolder}/express",
       "request": "launch",
-      "name": "运行 nodejs index",
+      "restart": true,
+      "runtimeExecutable": "nodemon",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/nodejs/index.js"
+      "type": "node"
     },
     {
-      "type": "node",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "nodemon nodejs",
+      "program": "${workspaceFolder}/nodejs/index.js",
       "request": "launch",
-      "name": "运行 Express",
+      "restart": true,
+      "runtimeExecutable": "nodemon",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/express/index.js"
+      "type": "node"
     }
   ]
 }

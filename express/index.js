@@ -1,13 +1,15 @@
 import express from 'express'
 import { sequelize, authenticateAndSync } from '../nodejs/database.js';
 import process from 'node:process';
-import Users from "./users.js"
+import Users, { hanleUserErrors } from "./users.js"
 import createResource from './resource.js';
 
 const app = express()
 const port = 3000
 
 createResource(app, "/users", Users)
+
+app.use(hanleUserErrors)
 
 authenticateAndSync();
 

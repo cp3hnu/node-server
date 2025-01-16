@@ -2,8 +2,10 @@ import Method from "../nodejs/method.js";
 import { createSuccessResponse, createErrorResponse } from "../nodejs/response.js";
 import { User } from '../nodejs/database.js';
 import { Op } from 'sequelize'
+import express from "express"
+const router = express.Router()
 
-export class UserError extends Error {
+class UserError extends Error {
   constructor(message) {
     super(message);
     this.name = 'UserError';
@@ -11,17 +13,7 @@ export class UserError extends Error {
   }
 }
 
-export function hanleUserErrors (error, request, response, next) {
-  if (error instanceof UserError) {
-    response.statusCode = 200;
-    response.setHeader('Content-Type', 'application/json');
-    response.end(JSON.stringify(createErrorResponse(404, error.message)));
-    return
-  }
-  next(error)
-}
-
-export const getUsers = async (request, response, next) => {
+const getUsers = async (request, response, next) => {
   const id = request.params.id
   const idNum = Number(id);
   if (id && !isNaN(idNum)) {
@@ -55,7 +47,7 @@ export const getUsers = async (request, response, next) => {
     response.end(JSON.stringify(createSuccessResponse(users)));
   }
 }
-export const postUsers = async (request, response) => {
+const postUsers = async (request, response) => {
   request.setEncoding('utf8');
   let body = '';
   request.on('data', (data) => {
@@ -70,7 +62,7 @@ export const postUsers = async (request, response) => {
   });
 }
 
-export const patchUsers = async (request, response, next) => {
+const patchUsers = async (request, response, next) => {
   const id = request.params.id
   const idNum = Number(id);
   request.setEncoding('utf8');
@@ -97,7 +89,7 @@ export const patchUsers = async (request, response, next) => {
   });
 }
 
-export const putUsers = async (request, response, next) => {
+const putUsers = async (request, response, next) => {
   const id = request.params.id
   const idNum = Number(id);
   request.setEncoding('utf8');
@@ -125,7 +117,7 @@ export const putUsers = async (request, response, next) => {
   });
 }
 
-export const deleteUsers = async (request, response, next) => {
+const deleteUsers = async (request, response, next) => {
   const id = request.params.id
   const idNum = Number(id);
   const result = await User.destroy({
@@ -141,12 +133,21 @@ export const deleteUsers = async (request, response, next) => {
   response.end(JSON.stringify(createSuccessResponse(null)));
 }
 
-const Users = {
-  [Method.GET]: getUsers,
-  [Method.POST]: postUsers,
-  [Method.PATCH]: patchUsers,
-  [Method.PUT]: putUsers,
-  [Method.DELETE]: deleteUsers
-}
+router.get("/", getUsers);
+router.get("/:id(\\d+)", getUsers);
+router.post("/" , postUsers);
+router.put("/:id(\\d+)", putUsers);
+router.patch("/:id(\\d+)", patchUsers);
+router.delete("/:id(\\d+)", deleteUsers);
 
-export default Users
+router.use((error, request, response, next) => {
+  if (error instanceof UserError) {
+    response.statusCode = 200;
+    response.setHeader('Content-Type', 'application/json');
+    response.end(JSON.stringify(createErrorResponse(404, error.message)));
+    return
+  }
+  next(error)
+});
+
+export default router;

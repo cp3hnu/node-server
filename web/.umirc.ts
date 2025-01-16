@@ -26,7 +26,7 @@ export default defineConfig({
   npmClient: 'pnpm',
   proxy: {
     '/api': {
-      target: 'http://localhost:3000',
+      target: 'http://localhost:3100',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
